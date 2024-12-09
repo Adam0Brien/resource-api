@@ -28,7 +28,7 @@ jobs:
           rm -rf typespec-examples
 
       - name: generate api
-        run: make api_breaking
+        run: make init && make build && make api_breaking
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
