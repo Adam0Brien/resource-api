@@ -37,3 +37,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Sync updated proto files from resource-api'
           title: Update proto files in TypeScript examples
+          body: |
+            This PR updates the Protobuf files generated from the latest TypeSpec definitions.
