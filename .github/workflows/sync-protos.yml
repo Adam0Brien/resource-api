@@ -1,0 +1,36 @@
+name: sync-protos
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours.
+
+jobs:
+  build:
+    name: Sync protos to clients
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone TypeScript examples repo
+        run: git clone --depth=1 https://github.com/Adam0Brien/typespec-examples.git
+
+      - name: Remove old proto files
+        run: rm -rf resource-api/api/resources/v1/*.proto
+
+      - name: Copy in new proto files
+        run: |
+          mkdir -p resource-api/api/resources/v1/
+          cp -r src/main/proto/*.proto resource-api/api/resources/v1/
+
+      - name: generate api
+        run: make api_breaking
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Sync updated proto files from resource-api'
+          title: Update proto files in TypeScript examples
