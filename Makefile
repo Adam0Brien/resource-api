@@ -2,6 +2,10 @@ GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 
+ifeq ($(DOCKER),)
+DOCKER:=$(shell command -v podman || command -v docker)
+endif
+
 ifeq ($(GOHOSTOS), windows)
 	#the `find.exe` is different from `find` in bash/shell.
 	#to see https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/find.
@@ -37,8 +41,8 @@ config:
 # generate api proto
 api_breaking:
 	@echo "Generating api protos, allowing breaking changes"
-	docker build -t custom-protoc ./api
-	docker run -t --rm -v $(PWD)/api:/api:rw,z -v $(PWD)/openapi.yaml:/openapi.yaml:rw,z \
+	@$(DOCKER) build -t custom-protoc ./api
+	@$(DOCKER) run -t --rm -v $(PWD)/api:/api:rw,z -v $(PWD)/openapi.yaml:/openapi.yaml:rw,z \
 	-w=/api/ custom-protoc sh -c "buf generate"
 
 
