@@ -16,14 +16,14 @@ jobs:
 
       - name: Remove old proto files
         run: |
-          rm resource-api/api/resources/v1/*.proto
-          ls resource-api/api/resources/v1/
+          rm api/resource-api/api/resources/v1/*.proto
+          ls api/resource-api/api/resources/v1/
 
       - name: Copy in new proto files
         run: |
           git clone --depth=1 https://github.com/Adam0Brien/typespec-examples.git
           cd typespec-examples
-          cp -r src/main/proto/*.proto ../resource-api/api/resources/v1/
+          cp -r src/main/proto/*.proto ../api/resource-api/api/resources/v1/
           cd ..
           rm -rf typespec-examples
 
