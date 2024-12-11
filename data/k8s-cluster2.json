@@ -1,13 +1,13 @@
 {
   "k8s_cluster": {
     "metadata": {
-      "id": "cluster-12345",
+      "id": "cluster-1234",
       "created_at": "2024-12-11T12:59:10.466Z",
       "updated_at": "2024-12-11T12:59:10.466Z",
       "deleted_at": null
     },
     "resource_data": {
-      "external_cluster_id": "cluster-12345",
+      "external_cluster_id": "cluster-1234",
       "cluster_status": "READY",
       "kube_vendor": "OPENSHIFT",
       "kube_version": "1.31"

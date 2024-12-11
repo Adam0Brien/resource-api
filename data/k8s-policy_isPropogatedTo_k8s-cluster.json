@@ -1,0 +1,19 @@
+{
+  "object_subject_relationship": {
+    "metadata": {
+      "id": "string",
+      "created_at": "2024-12-11T13:13:45.099Z",
+      "updated_at": "2024-12-11T13:13:45.099Z",
+      "deleted_at": "2024-12-11T13:13:45.099Z"
+    },
+    "reporter_data": {
+      "reporter_type": "REPORTER_TYPE_UNSPECIFIED",
+      "reporter_version": "string",
+      "subject_local_resource_id": "cluster-12345",
+      "object_local_resource_id": "cluster-1234"
+    },
+    "relationship_data": {
+      "status": "STATUS_UNSPECIFIED"
+    }
+  }
+}
