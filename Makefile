@@ -62,6 +62,11 @@ api:
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
 
+PHONY: run
+# run api locally
+run: build
+	 ./bin/resource-api -conf configs
+
 .PHONY: generate
 # generate
 generate:

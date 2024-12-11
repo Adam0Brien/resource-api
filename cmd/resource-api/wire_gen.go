@@ -23,18 +23,33 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
+// wireApp initializes the Kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	dataLayer, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	resourceRepo := data.NewResourceRepo(dataData, logger)
+
+	// Initialize repositories and use cases
+	resourceRepo := data.NewResourceRepo(dataLayer, logger)
+	relationshipRepo := data.NewRelationshipRepo(dataLayer, logger)
+
 	resourceUsecase := biz.NewResourceUsecase(resourceRepo, logger)
-	kesselResourceServiceService := service.NewKesselResourceServiceService(resourceUsecase)
-	grpcServer := server.NewGRPCServer(confServer, kesselResourceServiceService, logger)
-	httpServer := server.NewHTTPServer(confServer, kesselResourceServiceService, logger)
+	relationshipUsecase := biz.NewRelationshipUsecase(relationshipRepo, logger)
+
+	// Initialize services
+	resourceService := service.NewKesselResourceServiceService(resourceUsecase)
+	relationshipService := service.NewKesselRelationshipServiceService(relationshipUsecase)
+
+	// Initialize servers
+	grpcServer := server.NewGRPCServer(confServer, resourceService, relationshipService, logger)
+	httpServer := server.NewHTTPServer(confServer, resourceService, relationshipService, logger)
+
+	// Create the application
 	app := newApp(logger, grpcServer, httpServer)
+
 	return app, func() {
 		cleanup()
 	}, nil
 }
+

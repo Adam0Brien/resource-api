@@ -3,9 +3,79 @@
 
 openapi: 3.0.3
 info:
-    title: KesselResourceService API
+    title: ""
     version: 0.0.1
 paths:
+    /api/inventory/v1beta1/resource-relationships/object-to-subject:
+        put:
+            tags:
+                - ObjectSubjectRelationshipService
+            operationId: ObjectSubjectRelationshipService_UpdateObjectSubjectRelationship
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/relationships.v1.UpdateObjectSubjectRelationshipRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/relationships.v1.UpdateObjectSubjectRelationshipResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - ObjectSubjectRelationshipService
+            operationId: ObjectSubjectRelationshipService_CreateObjectSubjectRelationship
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/relationships.v1.CreateObjectSubjectRelationshipRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/relationships.v1.CreateObjectSubjectRelationshipResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - ObjectSubjectRelationshipService
+            operationId: ObjectSubjectRelationshipService_DeleteObjectSubjectRelationship
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/relationships.v1.DeleteObjectSubjectRelationshipRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/relationships.v1.DeleteObjectSubjectRelationshipResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /api/v1/resources:
         put:
             tags:
@@ -102,6 +172,118 @@ components:
                         $ref: '#/components/schemas/google.protobuf.Any'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        relationships.v1.CreateObjectSubjectRelationshipRequest:
+            type: object
+            properties:
+                object_subject_relationship:
+                    $ref: '#/components/schemas/relationships.v1.ObjectSubjectRelationship'
+        relationships.v1.CreateObjectSubjectRelationshipResponse:
+            type: object
+            properties: {}
+        relationships.v1.DeleteObjectSubjectRelationshipRequest:
+            type: object
+            properties:
+                reporter_data:
+                    $ref: '#/components/schemas/relationships.v1.ReporterData'
+        relationships.v1.DeleteObjectSubjectRelationshipResponse:
+            type: object
+            properties: {}
+        relationships.v1.Metadata:
+            type: object
+            properties:
+                id:
+                    type: string
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+                deleted_at:
+                    type: string
+                    format: date-time
+        relationships.v1.ObjectSubjectRelationship:
+            type: object
+            properties:
+                metadata:
+                    allOf:
+                        - $ref: '#/components/schemas/relationships.v1.Metadata'
+                    description: Metadata about this resource
+                reporter_data:
+                    allOf:
+                        - $ref: '#/components/schemas/relationships.v1.ReporterData'
+                    description: Reporter-specific data
+                relationship_data:
+                    allOf:
+                        - $ref: '#/components/schemas/relationships.v1.ObjectSubjectRelationshipDetail'
+                    description: Relationship details
+        relationships.v1.ObjectSubjectRelationshipDetail:
+            type: object
+            properties:
+                object_id:
+                    readOnly: true
+                    type: string
+                subject_id:
+                    readOnly: true
+                    type: string
+                status:
+                    enum:
+                        - STATUS_UNSPECIFIED
+                        - STATUS_OTHER
+                        - VIOLATIONS
+                        - NO_VIOLATIONS
+                    type: string
+                    format: enum
+        relationships.v1.ReporterData:
+            type: object
+            properties:
+                reporter_type:
+                    enum:
+                        - REPORTER_TYPE_UNSPECIFIED
+                        - REPORTER_TYPE_OTHER
+                        - ACM
+                        - HBI
+                        - OCM
+                        - NOTIFICATIONS
+                    type: string
+                    format: enum
+                reporter_instance_id:
+                    readOnly: true
+                    type: string
+                    description: |-
+                        The ID of the instance of the reporter. This is derived from the
+                         authentication mechanism, i.e. authentication token.
+                reporter_version:
+                    type: string
+                    description: version of the reporter
+                first_reported:
+                    readOnly: true
+                    type: string
+                    description: Date and time when the inventory item was first reported by this reporter
+                    format: date-time
+                last_reported:
+                    readOnly: true
+                    type: string
+                    description: Date and time when the inventory item was last updated by this reporter
+                    format: date-time
+                subject_local_resource_id:
+                    type: string
+                    description: |-
+                        The ID assigned by the reporter to resource which is the subject of the relationship. For example
+                         OCM cluster ID, HBI's host id, or ACM managed cluster name etc.
+                object_local_resource_id:
+                    type: string
+                    description: |-
+                        The ID assigned by the reporter to resource which is the object of the relationship. For example
+                         OCM cluster ID, HBI's host id, or ACM managed cluster name etc.
+        relationships.v1.UpdateObjectSubjectRelationshipRequest:
+            type: object
+            properties:
+                object_subject_relationship:
+                    $ref: '#/components/schemas/relationships.v1.ObjectSubjectRelationship'
+        relationships.v1.UpdateObjectSubjectRelationshipResponse:
+            type: object
+            properties: {}
         resources.v1.CreateResourceRequest:
             type: object
             properties:
@@ -203,3 +385,4 @@ components:
             properties: {}
 tags:
     - name: KesselResourceService
+    - name: ObjectSubjectRelationshipService

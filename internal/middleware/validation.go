@@ -46,3 +46,12 @@ func ValidateResourceCount(msg protoreflect.ProtoMessage) error {
 	}
 	return nil
 }
+
+//func isAllowedObject(object string, allowedObjects []string) bool {
+//	for _, allowed := range allowedObjects {
+//		if object == allowed {
+//			return true
+//		}
+//	}
+//	return false
+//}

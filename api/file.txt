@@ -1,0 +1,9 @@
+
+
+
+
+k8sPolicy_isPropogatedTo_k8sCluster
+
+
+subject_isPropogatedTo_object
+

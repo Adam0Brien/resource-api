@@ -2,7 +2,8 @@ package server
 
 import (
 	"github.com/bufbuild/protovalidate-go"
-	v1 "github.com/tonytheleg/resource-api/api/resources/v1"
+	v1rel "github.com/tonytheleg/resource-api/api/relationships/v1"
+	v1r "github.com/tonytheleg/resource-api/api/resources/v1"
 
 	"github.com/tonytheleg/resource-api/internal/conf"
 	m "github.com/tonytheleg/resource-api/internal/middleware"
@@ -15,7 +16,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, rs *service.KesselResourceServiceService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, rs *service.KesselResourceServiceService, rel *service.KesselRelationshipServiceService, logger log.Logger) *http.Server {
 	validator, _ := protovalidate.New()
 
 	var opts = []http.ServerOption{
@@ -35,6 +36,7 @@ func NewHTTPServer(c *conf.Server, rs *service.KesselResourceServiceService, log
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterKesselResourceServiceHTTPServer(srv, rs)
+	v1r.RegisterKesselResourceServiceHTTPServer(srv, rs)
+	v1rel.RegisterObjectSubjectRelationshipServiceHTTPServer(srv, rel)
 	return srv
 }

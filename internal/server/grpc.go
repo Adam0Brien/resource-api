@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/bufbuild/protovalidate-go"
+	v1rel "github.com/tonytheleg/resource-api/api/relationships/v1"
 	v1 "github.com/tonytheleg/resource-api/api/resources/v1"
 
 	"github.com/tonytheleg/resource-api/internal/conf"
@@ -15,7 +16,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, rs *service.KesselResourceServiceService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, rs *service.KesselResourceServiceService, rel *service.KesselRelationshipServiceService, logger log.Logger) *grpc.Server {
 	validator, _ := protovalidate.New()
 
 	var opts = []grpc.ServerOption{
@@ -36,5 +37,6 @@ func NewGRPCServer(c *conf.Server, rs *service.KesselResourceServiceService, log
 	}
 	srv := grpc.NewServer(opts...)
 	v1.RegisterKesselResourceServiceServer(srv, rs)
+	v1rel.RegisterObjectSubjectRelationshipServiceServer(srv, rel)
 	return srv
 }

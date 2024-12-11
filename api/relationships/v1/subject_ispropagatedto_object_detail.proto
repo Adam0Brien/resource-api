@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package relationships.v1;
+
+import "google/api/field_behavior.proto";
+import "buf/validate/validate.proto";
+
+option go_package = "github.com/tonytheleg/resource-api/api/relationships;relationships";
+//option go_package = "github.com/project-kessel/inventory-api/api/kessel/inventory/v1beta1/relationships";
+//option java_multiple_files = true;
+//option java_package = "org.project_kessel.api.inventory.v1beta1.relationships";
+//option java_outer_classname = "ObjectSubjectRelationshipDetailProto";
+
+message ObjectSubjectRelationshipDetail {
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OTHER = 1;
+    VIOLATIONS = 2;
+    NO_VIOLATIONS = 3;
+  }
+
+  int64 object_id = 1
+  [json_name = "object_id", (google.api.field_behavior) = OUTPUT_ONLY];
+
+  int64 subject_id = 2
+  [json_name = "subject_id", (google.api.field_behavior) = OUTPUT_ONLY];
+
+  Status status = 3
+  [json_name = "status", (buf.validate.field).enum = {not_in: [0], defined_only: true}];
+}
